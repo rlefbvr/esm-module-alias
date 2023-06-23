@@ -44,7 +44,7 @@ Taken from this [fantastic guide](https://gist.github.com/sindresorhus/a39789f98
 - Update the `"engines"` field in package.json to Node.js 14: `"node": ">=14.16"`. (Excluding Node.js 12 as it's no longer supported)
 - Remove `'use strict';` from all JavaScript files.
 - Replace all `require()`/`module.export` with `import`/`export`.
-- Use only full relative file paths for imports: `import x from '.';` → `import x from './index.js';`.
+- [FORK] Use directory path (containing an index.js file), file path without extension (only for .js, .jsx, .ts, .tsx, .json files) or full relative file paths for imports: `import index from '@fun';`, `import foo from '@fun/foo';`, `import foo from '@fun/foo.js';`, .
 - If you have a TypeScript type definition (for example, `index.d.ts`), update it to use ESM imports/exports.
 - Optional but recommended, use the [`node:` protocol](https://nodejs.org/api/esm.html#esm_node_imports) for imports.
 

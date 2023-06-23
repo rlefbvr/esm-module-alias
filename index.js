@@ -1,4 +1,5 @@
 import path from 'node:path';
+import fs from 'node:fs';
 
 export default function generateAliasesResolver(aliasesToAdd) {
   const getAliases = () => {
@@ -26,6 +27,25 @@ export default function generateAliasesResolver(aliasesToAdd) {
   return (specifier, parentModuleURL, defaultResolve) => {
 
     const alias = Object.keys(aliases).find((key) => isAliasInSpecifier(specifier, key));
+    const testSpecifiers = []
+
+    if (alias !== undefined) {
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length) + '.js'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length) + '.ts'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length) + '.jsx'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length) + '.tsx'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length) + '.json'))
+
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length), 'index.js'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length), 'index.ts'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length), 'index.jsx'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length), 'index.tsx'))
+      testSpecifiers.push(path.join(aliases[alias], specifier.substr(alias.length), 'index.json'))   
+
+      for(const item of testSpecifiers) {
+        if (fs.existsSync(item.replace('file:\\', ''))) return defaultResolve(item, parentModuleURL);
+      }
+    }
 
     const newSpecifier = alias === undefined
       ? specifier
